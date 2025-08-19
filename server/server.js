@@ -1,33 +1,35 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import pool from './config/db.js';
+import prisma from './config/prisma.js';
 
 dotenv.config();
-console.log("📂 dotenv loaded from:", process.env.PWD || process.cwd());
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD || "(empty)");
-
 
 const app = express();
 app.use(express.json());
 
+// Test route
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-async function startServer() {
+// Create a user
+app.post('/users', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT 1 + 1 AS result');
-    console.log('✅ MySQL connected! Test result:', rows[0].result);
-
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    const { name, email, password } = req.body;
+    const user = await prisma.user.create({
+      data: { name, email, password }
     });
-  } catch (err) {
-    console.error('❌ Failed to connect to MySQL:', err.message);
-    process.exit(1);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-}
+});
 
-startServer();
+// Get all users
+app.get('/users', async (req, res) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
