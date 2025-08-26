@@ -3,19 +3,27 @@ import Landing from "./pages/Landing";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
+import { CartProvider } from "./context/CartContext";
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <div className="flex-1">
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/orders" element={<Orders />} />
-        </Routes>
-      </div>
-    </Router>
+    <CartProvider>
+      <Router>
+        <div className="min-h-screen bg-background flex flex-col">
+          {/* Navbar */}
+          <Navbar />
+
+          {/* Page Content */}
+          <div className="flex-1 px-4 py-6">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/orders" element={<Orders />} />
+            </Routes>
+          </div>
+        </div>
+      </Router>
+    </CartProvider>
   );
 }
 
