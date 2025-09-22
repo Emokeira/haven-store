@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import { CartProvider } from "./context/CartContext";
 
@@ -10,7 +12,7 @@ function App() {
     <CartProvider>
       <Router>
         <div className="min-h-screen bg-background flex flex-col">
-          {/* Navbar */}
+          {/* Navbar (always visible) */}
           <Navbar />
 
           {/* Page Content */}
@@ -19,6 +21,8 @@ function App() {
               <Route path="/" element={<Landing />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </div>
         </div>
