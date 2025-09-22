@@ -1,27 +1,30 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const { user, logout } = useContext(AuthContext);
-
   return (
-    <nav className="bg-gray-800 text-white p-4 flex justify-between">
-      <Link to="/">🏪 Haven Store</Link>
-      <div>
-        {user ? (
-          <>
-            <span className="mr-4">Hi, {user.name}</span>
-            <button onClick={logout} className="bg-red-500 px-3 py-1 rounded">
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="mr-3">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
-        )}
+    <nav className="bg-amber-600 text-white px-6 py-3 shadow-md flex justify-between items-center">
+      {/* Logo / Brand */}
+      <Link to="/" className="text-2xl font-bold hover:text-amber-200">
+        Haven Store
+      </Link>
+
+      {/* Links */}
+      <div className="space-x-6">
+        <Link to="/" className="hover:text-amber-200">
+          Home
+        </Link>
+        <Link to="/orders" className="hover:text-amber-200">
+          Orders
+        </Link>
+        <Link to="/cart" className="hover:text-amber-200">
+          Cart
+        </Link>
+        <Link to="/login" className="hover:text-amber-200">
+          Login
+        </Link>
+        <Link to="/register" className="hover:text-amber-200">
+          Register
+        </Link>
       </div>
     </nav>
   );
