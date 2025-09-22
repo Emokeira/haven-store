@@ -1,45 +1,68 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+// server/routes/categories.routes.js
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
 const router = express.Router();
+const prisma = new PrismaClient();
 
-// GET all categories
-router.get('/', async (req, res) => {
+// Create category
+router.post("/", async (req, res) => {
   try {
-    const categories = await prisma.category.findMany({
-      include: { products: true }, // include products inside each category
-    });
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// POST new category
-router.post('/', async (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ error: 'Category name is required' });
-  }
-
-  try {
-    // check if category exists
-    const existingCategory = await prisma.category.findUnique({
-      where: { name },
-    });
-
-    if (existingCategory) {
-      return res.status(400).json({ error: 'Category already exists' });
-    }
-    // create new category
+    const { name } = req.body;
     const category = await prisma.category.create({
       data: { name },
     });
-    res.status(201).json(category);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json(category);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Get all categories
+router.get("/", async (req, res) => {
+  const categories = await prisma.category.findMany({
+    include: { products: true },
+  });
+  res.json(categories);
+});
+
+// Get single category by id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const category = await prisma.category.findUnique({
+    where: { id: parseInt(id) },
+    include: { products: true },
+  });
+  res.json(category);
+});
+
+// Update category
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const category = await prisma.category.update({
+      where: { id: parseInt(id) },
+      data: { name },
+    });
+
+    res.json(category);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete category
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.category.delete({
+      where: { id: parseInt(id) },
+    });
+    res.json({ message: "Category deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
