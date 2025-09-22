@@ -1,34 +1,76 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+// server/routes/products.routes.js
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
 const router = express.Router();
+const prisma = new PrismaClient();
 
-// GET all products
-router.get('/', async (req, res) => {
+// Create product
+router.post("/", async (req, res) => {
   try {
-    const products = await prisma.product.findMany();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const { name, description, price, stock, categoryId } = req.body;
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        description,
+        price,
+        stock,
+        categoryId,
+      },
+    });
+
+    res.json(product);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
-// POST a new product
-router.post('/', async (req, res) => {
-  const { name, description, price, stock, categoryId } = req.body;
+// Get all products
+router.get("/", async (req, res) => {
+  const products = await prisma.product.findMany({
+    include: { category: true },
+  });
+  res.json(products);
+});
 
-  if (!name || !price || !categoryId) {
-    return res.status(400).json({ error: 'name, price, and categoryId are required' });
-  }
+// Get single product by id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = await prisma.product.findUnique({
+    where: { id: parseInt(id) },
+    include: { category: true },
+  });
+  res.json(product);
+});
 
+// Update product
+router.put("/:id", async (req, res) => {
   try {
-    const product = await prisma.product.create({
+    const { id } = req.params;
+    const { name, description, price, stock, categoryId } = req.body;
+
+    const product = await prisma.product.update({
+      where: { id: parseInt(id) },
       data: { name, description, price, stock, categoryId },
     });
-    res.status(201).json(product);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.json(product);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete product
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.product.delete({
+      where: { id: parseInt(id) },
+    });
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
