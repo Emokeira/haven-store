@@ -1,24 +1,36 @@
 import React from "react";
 
 export default function ProductCard({ product, addToCart }) {
+  // Ensure the product.image is already imported in Landing.jsx
+  const productImage = product.image;
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-      {/* Product Image */}
-      <img
-        src={product.image || "/images/noimage.jpg"} // use your image field
-        alt={product.name}
-        className="w-full h-48 object-cover"
-      />
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition duration-500">
+      {/* Image Section */}
+      <div className="relative overflow-hidden">
+        <img
+          src={productImage}
+          alt={product.name}
+          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        {/* Optional badge */}
+        {product.isNew && (
+          <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+            New
+          </span>
+        )}
+      </div>
 
-      {/* Product Info */}
-      <div className="p-4 flex flex-col flex-1 justify-between">
-        <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-        <p className="text-gray-600 mt-1">${product.price.toFixed(2)}</p>
+      {/* Info Section */}
+      <div className="p-5 flex flex-col">
+        <h3 className="text-lg font-serif font-semibold text-gray-800 truncate mb-2">
+          {product.name}
+        </h3>
+        <p className="text-xl font-bold text-amber-600 mb-4">${product.price}</p>
 
-        {/* Add to Cart Button */}
         <button
           onClick={() => addToCart(product)}
-          className="mt-4 bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-colors"
+          className="mt-auto bg-amber-500 text-white py-3 rounded-xl shadow-lg hover:bg-amber-600 active:scale-95 transition transform"
         >
           Add to Cart
         </button>
