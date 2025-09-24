@@ -7,6 +7,7 @@ import categoryRoutes from "./routes/categories.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import orderRoutes from "./routes/orders.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -19,6 +20,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", authRoutes);
+app.use(errorHandler);
 
 // Health check
 app.get("/", (req, res) => {
