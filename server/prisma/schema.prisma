@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String
-  isAdmin  Boolean @default(false)
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
   orders    Order[]
   cart      Cart?
@@ -25,16 +25,16 @@ model Category {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
   description String?
   price       Float
   stock       Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
+  imageUrl    String? 
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   categoryId  Int?
-  category    Category? @relation(fields: [categoryId], references: [id])
+  category    Category?  @relation(fields: [categoryId], references: [id])
 
   cartItems   CartItem[]
   orderItems  OrderItem[]
@@ -60,6 +60,7 @@ model CartItem {
 model Order {
   id        Int         @id @default(autoincrement())
   userId    Int
+  total     Float       // ✅ Added this so seed.js can insert totals
   status    String      @default("PENDING")
   createdAt DateTime    @default(now())
 
