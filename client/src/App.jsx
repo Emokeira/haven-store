@@ -1,11 +1,14 @@
+// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Checkout from "./pages/Checkout"; // 👈 you forgot this
+import Checkout from "./pages/Checkout";
+import About from "./pages/About"; // 👈 new page
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { CartProvider } from "./context/CartContext";
 
 function App() {
@@ -25,8 +28,12 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/about" element={<About />} /> {/* 👈 new route */}
             </Routes>
           </div>
+
+          {/* Footer (always at bottom) */}
+          <Footer />
         </div>
       </Router>
     </CartProvider>
