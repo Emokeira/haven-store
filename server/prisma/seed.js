@@ -80,7 +80,7 @@ async function main() {
     }),
   ]);
 
-  // --- 3. Products ---
+  // --- 3. Products (image paths updated to /products/...) ---
   const productsData = [
     {
       name: "Modern Sofa",
@@ -88,7 +88,7 @@ async function main() {
       price: 550,
       stock: 5,
       categoryId: categoryMap["Furniture"],
-      imageUrl: "/assets/products/sofa.jpg",
+      imageUrl: "/products/sofa.jpg",
     },
     {
       name: "Wooden Coffee Table",
@@ -96,7 +96,7 @@ async function main() {
       price: 150.99,
       stock: 10,
       categoryId: categoryMap["Furniture"],
-      imageUrl: "/assets/products/coffee-table.jpg",
+      imageUrl: "/products/coffee-table.jpg",
     },
     {
       name: "Office Chair",
@@ -104,7 +104,7 @@ async function main() {
       price: 220,
       stock: 8,
       categoryId: categoryMap["Furniture"],
-      imageUrl: "/assets/products/office-chair.jpg",
+      imageUrl: "/products/office-chair.jpg",
     },
     {
       name: "Dining Table Set",
@@ -112,7 +112,7 @@ async function main() {
       price: 899.99,
       stock: 3,
       categoryId: categoryMap["Furniture"],
-      imageUrl: "/assets/products/dining-table.jpg",
+      imageUrl: "/products/dining-table.jpg",
     },
     {
       name: "Wall Mirror",
@@ -120,7 +120,7 @@ async function main() {
       price: 80,
       stock: 15,
       categoryId: categoryMap["Decor"],
-      imageUrl: "/assets/products/wall-mirror.jpg",
+      imageUrl: "/products/wall-mirror.jpg",
     },
     {
       name: "Ceramic Vase",
@@ -128,7 +128,7 @@ async function main() {
       price: 35.5,
       stock: 20,
       categoryId: categoryMap["Decor"],
-      imageUrl: "/assets/products/vase.jpg",
+      imageUrl: "/products/vase.jpg",
     },
     {
       name: "Abstract Wall Art",
@@ -136,7 +136,7 @@ async function main() {
       price: 120,
       stock: 7,
       categoryId: categoryMap["Decor"],
-      imageUrl: "/assets/products/wall-art.jpg",
+      imageUrl: "/products/wall-art.jpg",
     },
     {
       name: "Non-Stick Frying Pan",
@@ -144,7 +144,7 @@ async function main() {
       price: 25,
       stock: 30,
       categoryId: categoryMap["Kitchen"],
-      imageUrl: "/assets/products/frying-pan.jpg",
+      imageUrl: "/products/frying-pan.jpg",
     },
     {
       name: "Cutlery Set",
@@ -152,7 +152,7 @@ async function main() {
       price: 50,
       stock: 25,
       categoryId: categoryMap["Kitchen"],
-      imageUrl: "/assets/products/cutlery.jpg",
+      imageUrl: "/products/cutlery.jpg",
     },
     {
       name: "Blender",
@@ -160,7 +160,7 @@ async function main() {
       price: 120,
       stock: 10,
       categoryId: categoryMap["Kitchen"],
-      imageUrl: "/assets/products/blender.jpg",
+      imageUrl: "/products/blender.jpg",
     },
     {
       name: "Chandelier",
@@ -168,7 +168,7 @@ async function main() {
       price: 499,
       stock: 2,
       categoryId: categoryMap["Lighting"],
-      imageUrl: "/assets/products/chandelier.jpg",
+      imageUrl: "/products/chandelier.jpg",
     },
     {
       name: "Table Lamp",
@@ -176,7 +176,7 @@ async function main() {
       price: 45,
       stock: 12,
       categoryId: categoryMap["Lighting"],
-      imageUrl: "/assets/products/table-lamp.jpg",
+      imageUrl: "/products/table-lamp.jpg",
     },
     {
       name: "Wall Sconce",
@@ -184,7 +184,7 @@ async function main() {
       price: 70,
       stock: 15,
       categoryId: categoryMap["Lighting"],
-      imageUrl: "/assets/products/wall-sconce.jpg",
+      imageUrl: "/products/wall-sconce.jpg",
     },
   ];
 
