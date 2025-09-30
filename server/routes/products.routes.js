@@ -1,12 +1,6 @@
 import express from "express";
-import {
-  createProduct,
-  getProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-} from "../controllers/productController.js";
-import { protect, adminOnly } from "../middlewares/authMiddleware.js"; // add middleware
+import { createProduct, getProducts, getProductById, updateProduct, deleteProduct } from "../controllers/productController.js";
+import { protect, adminOnly } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
