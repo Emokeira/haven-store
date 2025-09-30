@@ -1,68 +1,104 @@
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { ShoppingCart, Trash2, Minus, Plus } from "lucide-react";
 
 export default function Cart() {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, addToCart, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
 
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleCheckout = () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
-      return;
-    }
-    // Here you can later connect to backend (createOrder API)
-    alert("Checkout successful! Order placed.");
-    clearCart();
-    navigate("/orders");
+    if (cart.length === 0) return;
+    navigate("/checkout"); // 👈 navigate to checkout page
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-      <h1 className="text-2xl font-bold text-primary mb-4">Your Cart</h1>
+    <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-md">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <ShoppingCart size={22} className="text-amber-600" /> Your Cart
+      </h1>
 
       {cart.length === 0 ? (
-        <p className="text-secondary">Your cart is empty.</p>
+        <div className="text-center py-12 text-gray-500">
+          <ShoppingCart size={40} className="mx-auto mb-3 opacity-60" />
+          <p className="text-lg">Your cart is empty.</p>
+          <button
+            onClick={() => navigate("/")}
+            className="mt-4 px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
+          >
+            Browse Products
+          </button>
+        </div>
       ) : (
         <>
           <div className="space-y-4">
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between bg-gray-50 p-3 rounded"
+                className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm"
               >
-                <div className="flex items-center gap-3">
+                {/* Product Info */}
+                <div className="flex items-center gap-4">
                   <img
-                    src={item.image || "https://via.placeholder.com/50"}
+                    src={item.image || "https://via.placeholder.com/60"}
                     alt={item.name}
-                    className="w-12 h-12 object-cover rounded"
+                    className="w-14 h-14 object-cover rounded-md"
                   />
                   <div>
-                    <p className="text-primary font-medium">{item.name}</p>
-                    <p className="text-secondary">
-                      Qty: {item.quantity} × ${item.price}
-                    </p>
+                    <p className="font-medium text-gray-800">{item.name}</p>
+                    <p className="text-gray-500 text-sm">${item.price} each</p>
                   </div>
                 </div>
+
+                {/* Quantity Controls */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="p-1.5 rounded bg-gray-200 hover:bg-gray-300"
+                  >
+                    <Minus size={16} />
+                  </button>
+                  <span className="min-w-[20px] text-center font-medium">
+                    {item.quantity}
+                  </span>
+                  <button
+                    onClick={() => addToCart(item)}
+                    className="p-1.5 rounded bg-gray-200 hover:bg-gray-300"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
+
+                {/* Remove */}
                 <button
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500 hover:underline"
+                  onClick={() =>
+                    [...Array(item.quantity)].forEach(() =>
+                      removeFromCart(item.id)
+                    )
+                  }
+                  className="text-red-500 hover:text-red-600"
                 >
-                  Remove
+                  <Trash2 size={18} />
                 </button>
               </div>
             ))}
           </div>
 
-          <div className="mt-6 flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Total: ${total.toFixed(2)}</h2>
+          {/* Cart Total + Checkout */}
+          <div className="mt-8 flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Total: ${total.toFixed(2)}
+            </h2>
             <button
               onClick={handleCheckout}
-              className="bg-primary text-white px-6 py-2 rounded hover:bg-accent transition-colors"
+              disabled={cart.length === 0}
+              className={`px-6 py-3 rounded-lg font-medium text-white transition
+                ${
+                  cart.length === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-amber-500 hover:bg-amber-600 active:scale-95"
+                }`}
             >
               Checkout
             </button>
