@@ -4,6 +4,7 @@ import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Checkout from "./pages/Checkout"; // 👈 you forgot this
 import Navbar from "./components/Navbar";
 import { CartProvider } from "./context/CartContext";
 
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<Landing />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Routes>
