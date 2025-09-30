@@ -1,92 +1,69 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import heroImg from "../assets/hero.jpg";
-import sofaImg from "../assets/products/sofa.jpg";
-import chairImg from "../assets/products/office-chair.jpg";
-import tableImg from "../assets/products/dining-table.jpg";
-
-const sampleProducts = [
-  { id: 1, name: "Modern Sofa", price: 499, image: sofaImg, isNew: true },
-  { id: 2, name: "Office Chair", price: 199, image: chairImg, isNew: true},
-  { id: 3, name: "Dining Table", price: 699, image: tableImg, isNew: true },
-];
-
-const categories = [
-  { id: 1, name: "Living Room", image: sofaImg, link: "/category/living" },
-  { id: 2, name: "Office", image: chairImg, link: "/category/office" },
-  { id: 3, name: "Dining", image: tableImg, link: "/category/dining" },
-];
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export default function Landing() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => setProducts(sampleProducts), []);
+  const { id } = useParams(); // category id from URL (/category/:id)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        let url = "/api/products"; // ✅ use relative path
+        if (id) {
+          url += `?categoryId=${id}`;
+        }
+
+        const { data } = await axios.get(url);
+        if (data.success) {
+          setProducts(data.data);
+        } else {
+          setError("Failed to fetch products");
+        }
+      } catch (err) {
+        setError("Error fetching products: " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [id]);
+
+  const addToCart = (product) => {
+    console.log("Add to cart clicked:", product);
+  };
+
+  if (loading) {
+    return <p className="text-center py-10">Loading products...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center py-10 text-red-500">{error}</p>;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-amber-50">
-      {/* Hero Section */}
-      <section className="flex flex-col md:flex-row items-center justify-between py-20 max-w-7xl mx-auto px-6">
-        <div className="md:w-1/2 mb-10 md:mb-0">
-          <h1 className="text-5xl font-extrabold text-gray-800 mb-6 tracking-wide font-serif">
-            Haven Store
-          </h1>
-          <p className="text-gray-600 text-lg md:text-xl mb-6 font-medium">
-            Luxury furniture & decor curated for your dream home
-          </p>
-          <Link
-            to="/shop"
-            className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-6 rounded-lg transition shadow-md"
-          >
-            Shop Now
-          </Link>
-        </div>
-        <div className="md:w-1/2 relative">
-          <img
-            src={heroImg}
-            alt="Luxury Home Decor"
-            className="rounded-3xl shadow-2xl w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/40 rounded-3xl"></div>
-        </div>
-      </section>
-
-      {/* Shop by Category */}
-      <section className="my-16 max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-gray-800 font-serif">Shop by Category</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              to={cat.link}
-              className="relative group overflow-hidden rounded-2xl shadow-lg cursor-pointer transform hover:scale-105 transition duration-500"
-            >
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="w-full h-56 object-cover"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                <h3 className="text-white text-2xl font-semibold">{cat.name}</h3>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="my-16 max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-gray-800 font-serif">Featured Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h1 className="text-3xl font-serif font-bold text-gray-800 mb-8 text-center">
+        {id ? `Category Products` : "Featured Products"}
+      </h1>
+      {products.length === 0 ? (
+        <p className="text-center text-gray-500">No products available.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
-              addToCart={(p) => console.log("Add:", p)}
+              addToCart={addToCart}
             />
           ))}
         </div>
-      </section>
+      )}
     </div>
   );
 }
