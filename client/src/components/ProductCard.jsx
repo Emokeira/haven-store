@@ -2,12 +2,39 @@ import { useState } from "react";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
 import { useCart } from "../context/CartContext";
 
+// 💲 Format prices safely
+const formatPrice = (value) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(Number(value) || 0);
+
 export default function ProductCard({ product }) {
-  const { addToCart } = useCart(); // 🔥 direct from context
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { addToCart } = useCart();
+
+  // Persist wishlist per product (localStorage)
+  const [isWishlisted, setIsWishlisted] = useState(() => {
+    const saved = localStorage.getItem("wishlist") || "[]";
+    return JSON.parse(saved).includes(product.id);
+  });
+
+  const toggleWishlist = () => {
+    const saved = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    let updated;
+    if (isWishlisted) {
+      updated = saved.filter((id) => id !== product.id);
+    } else {
+      updated = [...saved, product.id];
+    }
+    localStorage.setItem("wishlist", JSON.stringify(updated));
+    setIsWishlisted(!isWishlisted);
+  };
+
+  // Quick View (local modal, but optimized)
   const [showModal, setShowModal] = useState(false);
 
-  const productImage = product.imageUrl || product.image || "/placeholder.jpg"; // fallback
+  const productImage =
+    product.imageUrl || product.image || "/placeholder.jpg"; // fallback
 
   return (
     <>
@@ -21,9 +48,10 @@ export default function ProductCard({ product }) {
             className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
-          {/* Wishlist Heart */}
+          {/* Wishlist */}
           <button
-            onClick={() => setIsWishlisted(!isWishlisted)}
+            onClick={toggleWishlist}
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             className="absolute top-3 right-3 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-amber-100 transition"
           >
             <Heart
@@ -35,6 +63,7 @@ export default function ProductCard({ product }) {
           {/* Quick View */}
           <button
             onClick={() => setShowModal(true)}
+            aria-label="Quick view product"
             className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md p-2 rounded-full shadow-md hover:bg-amber-100 transition"
           >
             <Eye size={18} className="text-gray-700" />
@@ -63,7 +92,9 @@ export default function ProductCard({ product }) {
           </p>
 
           <div className="flex items-center justify-between mt-auto">
-            <p className="text-xl font-bold text-amber-600">${product.price}</p>
+            <p className="text-xl font-bold text-amber-600">
+              {formatPrice(product.price)}
+            </p>
 
             <button
               onClick={() => addToCart(product)}
@@ -77,11 +108,20 @@ export default function ProductCard({ product }) {
 
       {/* Quick View Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative">
-            {/* Close button */}
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={() => setShowModal(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative"
+            onClick={(e) => e.stopPropagation()} // prevent closing on content click
+          >
+            {/* Close */}
             <button
               onClick={() => setShowModal(false)}
+              aria-label="Close quick view"
               className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
             >
               ✕
@@ -101,7 +141,7 @@ export default function ProductCard({ product }) {
             </p>
 
             <p className="text-xl font-bold text-amber-600 mb-4">
-              ${product.price}
+              {formatPrice(product.price)}
             </p>
 
             <button
