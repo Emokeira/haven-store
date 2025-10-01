@@ -78,7 +78,9 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8 text-gray-200 font-medium">
           <div className="relative group">
-            <span className="hover:text-amber-400 cursor-pointer">Categories</span>
+            <span className="hover:text-amber-400 cursor-pointer">
+              Categories
+            </span>
             <div className="absolute hidden group-hover:block bg-white text-gray-800 mt-2 rounded-md shadow-lg min-w-[150px] z-20">
               {categories.map((cat) => (
                 <Link
@@ -91,6 +93,11 @@ export default function Navbar() {
               ))}
             </div>
           </div>
+
+          {/* ✅ New About link */}
+          <Link to="/about" className="hover:text-amber-400 transition">
+            About
+          </Link>
 
           <Link to="/orders" className="hover:text-amber-400 transition">
             Orders
@@ -121,7 +128,8 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1 text-gray-100 font-medium">
-                <User size={18} /> Hello, {user.name.split(" ")[0]}
+                <User size={18} /> Hello,{" "}
+                {user?.name ? user.name.split(" ")[0] : "User"}
               </span>
               <button
                 onClick={handleLogout}
@@ -172,6 +180,15 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* ✅ About link in mobile menu */}
+          <Link
+            to="/about"
+            className="block hover:text-amber-400 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            About
+          </Link>
+
           <Link
             to="/orders"
             className="block hover:text-amber-400 transition"
@@ -213,7 +230,7 @@ export default function Navbar() {
           ) : (
             <>
               <span className="block text-gray-100 font-medium">
-                Hello, {user.name.split(" ")[0]}
+                Hello, {user?.name ? user.name.split(" ")[0] : "User"}
               </span>
               <button
                 onClick={handleLogout}
