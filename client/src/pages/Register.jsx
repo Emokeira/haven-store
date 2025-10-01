@@ -31,10 +31,13 @@ export default function Register() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
+      if (!res.ok) throw new Error(data.message || "Registration failed");
 
-      login(data.user, data.token);
-      navigate("/"); // stay SPA-friendly
+      // 👇 Same fix as login
+      const { token, ...userData } = data;
+      login(userData, token);
+
+      navigate("/cart"); // straight to cart after registration
     } catch (err) {
       setError(err.message);
     } finally {
