@@ -1,9 +1,12 @@
-// server/routes/cart.routes.js
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import { protect } from "../middlewares/authMiddleware.js"; // import protect
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+// Apply protect middleware to all routes
+router.use(protect);
 
 /**
  * Add item to cart
@@ -12,23 +15,19 @@ router.post("/", async (req, res) => {
   const { userId, productId, quantity } = req.body;
 
   try {
-    // Check if product exists
     const product = await prisma.product.findUnique({ where: { id: productId } });
     if (!product) return res.status(404).json({ error: "Product not found" });
 
-    // Check if cart item already exists
     let cartItem = await prisma.cartItem.findFirst({
       where: { userId, productId },
     });
 
     if (cartItem) {
-      // Update quantity
       cartItem = await prisma.cartItem.update({
         where: { id: cartItem.id },
         data: { quantity: cartItem.quantity + quantity },
       });
     } else {
-      // Create new cart item
       cartItem = await prisma.cartItem.create({
         data: { userId, productId, quantity },
       });
