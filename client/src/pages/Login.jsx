@@ -30,10 +30,13 @@ export default function Login() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Login failed");
+      if (!res.ok) throw new Error(data.message || "Login failed");
 
-      login(data.user, data.token);
-      navigate("/"); // stay in SPA
+      // 👇 Pass whole user object (minus token) + token separately
+      const { token, ...userData } = data;
+      login(userData, token);
+
+      navigate("/cart"); // go straight to cart or homepage?
     } catch (err) {
       setError(err.message);
     } finally {
